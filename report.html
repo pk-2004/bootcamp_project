@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Report</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="student-report-container">
+        <header class="student-header">
+            <h1>Student Report</h1>
+            <div class="student-info">
+                <h2 id="student-name">Student 1</h2>
+            </div>
+        </header>
+        
+        <button class="back-button" onclick="goBack()">← Student List</button>
+
+        <section class="student-performance">
+            <div class="performance-card">
+                <h3>Attendance</h3>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 75%"></div>
+                </div>
+                <p>75% attendance</p>
+            </div>
+
+            <div class="performance-card">
+                <h3>Homework Assignments</h3>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 85%"></div>
+                </div>
+                <p>85% completed</p>
+            </div>
+
+            <div class="performance-card">
+                <h3>Participation</h3>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 60%"></div>
+                </div>
+                <p>60% participation rate</p>
+            </div>
+        </section>
+
+        <!-- Attendance Section -->
+        <section class="attendance-section">
+            <h3>Attendance</h3>
+            <div class="attendance-list">
+                <label class="attendance-label">
+                    <input type="checkbox" class="attendance-checkbox" id="day1">
+                    9/24
+                </label>
+                <label class="attendance-label">
+                    <input type="checkbox" class="attendance-checkbox" id="day2">
+                    10/1
+                </label>
+                <label class="attendance-label">
+                    <input type="checkbox" class="attendance-checkbox" id="day3">
+                    10/8
+                </label>
+                <label class="attendance-label">
+                    <input type="checkbox" class="attendance-checkbox" id="day4">
+                    10/15
+                </label>
+                <label class="attendance-label">
+                    <input type="checkbox" class="attendance-checkbox" id="day5">
+                    10/22
+                </label>
+                <label class="attendance-label">
+                    <input type="checkbox" class="attendance-checkbox" id="day6">
+                    10/29
+                </label>
+                <label class="attendance-label">
+                    <input type="checkbox" class="attendance-checkbox" id="day7">
+                    11/5
+                </label>
+                <label class="attendance-label">
+                    <input type="checkbox" class="attendance-checkbox" id="day8">
+                    11/12
+                </label>
+                <label class="attendance-label">
+                    <input type="checkbox" class="attendance-checkbox" id="day9">
+                    11/19
+                </label>
+                <label class="attendance-label">
+                    <input type="checkbox" class="attendance-checkbox" id="day10">
+                    11/26
+                </label>
+            </div>
+        </section>
+
+        <section class="notes">
+            <h3>Instructor Notes</h3>
+            <textarea placeholder="Write notes about this student..."></textarea>
+        </section>
+    </div>
+
+    <script>
+        // Function to go back to the previous page
+        function goBack() {
+            window.history.back();
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const studentName = urlParams.get('student'); // Get the student parameter from the URL
+
+        // If the studentName exists, update the page with the student's name
+        if (studentName) {
+            document.getElementById('student-name').textContent = studentName;
+            document.title = `${studentName}'s Report`; // Change the page title to the student's name
+        } else {
+            // Fallback in case no student name is provided in the URL
+            document.getElementById('student-name').textContent = "Unknown Student";
+            document.title = "Student Report";
+        }
+    </script>
+</body>
+</html>
