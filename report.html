@@ -92,7 +92,11 @@
 
         <section class="notes">
             <h3>Instructor Notes</h3>
-            <textarea placeholder="Write notes about this student..."></textarea>
+            <textarea id="note-text" placeholder="Write notes about this student..."></textarea>
+            <button id="save-note-button">Save Note</button>
+            <div id="saved-notes-container">
+                <!-- Saved notes will appear here -->
+            </div>
         </section>
     </div>
 
@@ -113,7 +117,77 @@
             // Fallback in case no student name is provided in the URL
             document.getElementById('student-name').textContent = "Unknown Student";
             document.title = "Student Report";
+
         }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const checkboxes = document.querySelectorAll(".attendance-checkbox");
+            const progressElement = document.querySelector(".student-performance .performance-card:nth-child(1) .progress");
+            const percentageText = document.querySelector(".student-performance .performance-card:nth-child(1) p");
+
+            // Function to calculate and update progress
+            function updateAttendanceProgress() {
+                const totalDays = checkboxes.length;
+                const checkedDays = Array.from(checkboxes).filter(checkbox => checkbox.checked).length;
+                const attendancePercentage = Math.round((checkedDays / totalDays) * 100);
+
+                // Update progress bar width
+                progressElement.style.width = `${attendancePercentage}%`;
+
+                // Update percentage text
+                percentageText.textContent = `${attendancePercentage}% attendance`;
+            }
+
+            // Attach event listener to all checkboxes
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener("change", updateAttendanceProgress);
+            });
+
+            // Initial update (in case some checkboxes are pre-checked)
+            updateAttendanceProgress();
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+        const noteText = document.getElementById("note-text");
+        const saveNoteButton = document.getElementById("save-note-button");
+        const savedNotesContainer = document.getElementById("saved-notes-container");
+
+        // Function to save the note and add it to the list
+        function saveNote() {
+            const noteContent = noteText.value.trim();
+            if (noteContent === "") {
+                alert("Please write a note before saving.");
+                return;
+            }
+
+            // Get the current date
+            const currentDate = new Date();
+            const formattedDate = currentDate.toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+            });
+
+            // Create a new note card
+            const noteCard = document.createElement("div");
+            noteCard.className = "note-card";
+
+            // Add content to the card
+            noteCard.innerHTML = `
+                <p><strong>Date:</strong> ${formattedDate}</p>
+                <p>${noteContent}</p>
+            `;
+
+            // Append the card to the saved notes container
+            savedNotesContainer.prepend(noteCard);
+
+            // Clear the textarea
+            noteText.value = "";
+        }
+
+        // Attach the saveNote function to the button click event
+        saveNoteButton.addEventListener("click", saveNote);
+    });
     </script>
 </body>
 </html>

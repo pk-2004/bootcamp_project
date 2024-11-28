@@ -333,3 +333,79 @@ footer {
     background-color: #6a4c9c; /* Purple color when checked */
     border-color: #6a4c9c; /* Purple border when checked */
 }
+
+/* Save Note Button */
+#save-note-button {
+    display: inline-block;
+    background-color: purple;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 10px;
+}
+
+#save-note-button:hover {
+    background-color: gray;
+    transform: scale(1.05);
+}
+
+#save-note-button:active {
+    background-color: purple;
+    transform: scale(0.95);
+}
+
+/* Saved Notes Container */
+#saved-notes-container {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f7f7f7;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    max-height: 300px;
+    overflow-y: auto;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Individual Note Card */
+.note-card {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin: 10px 0;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.note-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.note-card p {
+    margin: 5px 0;
+    color: #333;
+}
+
+.note-card p strong {
+    color: #555;
+}
+
+/* Scrollbar for saved notes container */
+#saved-notes-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+#saved-notes-container::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 8px;
+}
+
+#saved-notes-container::-webkit-scrollbar-thumb:hover {
+    background-color: #aaa;
+}
