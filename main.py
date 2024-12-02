@@ -1,55 +1,59 @@
-from fastapi import FastAPI, HTTPException
+# main.py
+from fastapi import FastAPI, HTTPException, UploadFile, File
 from pydantic import BaseModel
-import sqlite3
+import csv
+from database import get_db_connection, setup_database, insert_attendance, insert_multiple_attendance, get_all_attendance, get_attendance_by_student
 
 app = FastAPI()
 
-# defining a data model
+# Initialize the database on startup
+setup_database()
+
+# Data model for the attendance endpoint
 class Attendance(BaseModel):
     student_name: str
     date: str
     status: str
 
-# functions for database interactions
-
-# function for connecting to the database
-def get_db_connection():
-    conn = sqlite3.connect("attendance.db")
-    conn.row_factory = sqlite3.Row 
-    return conn
-
-# function for inserting new attendance records
-def insert_attendance(student_name: str, date: str, status: str):
-    conn = get_db_connection()
-    conn.execute("INSERT INTO attendance (student_name, date, status) VALUES (?, ?, ?)",
-                 (student_name, date, status))
-    conn.commit()
-    conn.close()
-
-# function for retrieving attendance records
-def get_attendance_by_student(student_name: str):
-    conn = get_db_connection()
-    attendance = conn.execute("SELECT * FROM attendance WHERE student_name = ?",
-                              (student_name,)).fetchall()
-    conn.close()
-    return attendance
-
-# defining two routes
-# one route will be for adding attendance
-# another route will be for seeing information on a specific selected student
-# Using POST and GET requests
-
-@app.post
+# Route to add individual attendance
+@app.post("/add_attendance/")
 def add_attendance(attendance: Attendance):
     insert_attendance(attendance.student_name, attendance.date, attendance.status)
     return {"message": f"Attendance for {attendance.student_name} on {attendance.date} was added."}
 
+# Route to retrieve attendance for a specific student
 @app.get("/attendance/{student_name}")
 def get_attendance(student_name: str):
-    # retrieving attendance data for a specific student
     attendance = get_attendance_by_student(student_name)
-    
-    # using a fail checker to make sure errors are caught
     if attendance:
         return {"attendance": [dict(row) for row in attendance]}
     raise HTTPException(status_code=404, detail="Student not found")
+
+# Route to upload multiple attendance records from a CSV
+@app.post("/upload_csv/")
+async def upload_csv(file: UploadFile = File(...)):
+    if not file.filename.endswith(".csv"):
+        raise HTTPException(status_code=400, detail="Invalid file type. Please upload a CSV.")
+    
+    records = []
+    try:
+        content = await file.read()
+        decoded_content = content.decode("utf-8").splitlines()
+        reader = csv.DictReader(decoded_content)
+        
+        for row in reader:
+            student_name = row["name"]
+            date = row["date"]
+            records.append((student_name, date, "Present"))  # Default status to "Present"
+
+        insert_multiple_attendance(records)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error processing file: {str(e)}")
+
+    return {"message": f"Uploaded {len(records)} attendance records successfully."}
+
+# Route to get all attendance records
+@app.get("/attendance/")
+def get_all_attendance_records():
+    rows = get_all_attendance()
+    return {"attendance": [dict(row) for row in rows]}
