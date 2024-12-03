@@ -40,6 +40,19 @@
   overflow: auto;
 }
 
+#upload-container {
+  align-items: center;
+  justify-content: center;
+  height: 15rem;
+  padding: 2rem;
+  margin: 2rem;
+  color: white;
+  border-style: solid;
+  background-color: rgba(46, 85, 148, 1);
+  border-color: rgba(46, 85, 148, 1);
+  border-radius: 30%;
+}
+
 #search-bar {
   margin: 1rem;
   width: 80%;
@@ -84,7 +97,7 @@
 
 .student-list li a {
   text-decoration: none;
-  color: rgba(46, 85, 148, 1)navy;
+  color: rgba(46, 85, 148, 1);
   display: block;
 }
 
@@ -114,19 +127,5 @@
 .student-name:hover {
   background-color: #5a3e7d; /* Darker purple */
   transform: translateY(-5px);
-}
-
-#homework-container,
-#participation-container {
-  flex: 1; /* Equal height within the right-side */
-  height: auto; /* Adjusts height automatically */
-  max-height: 12rem; /* Limit max height */
-  padding: 2rem;
-  margin: 0; /* Remove extra margins for clean stacking */
-  background-color: rgba(46, 85, 148, 1);
-  border-color: rgba(46, 85, 148, 1)navy;
-  color: white;
-  border-style: solid;
-  border-radius: 25%;
 }
 

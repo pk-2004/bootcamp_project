@@ -65,11 +65,47 @@ function Student({name}: Student ) {
 function App() {
   const [searchTerm, setSearchTerm] = useState("");
 
+  const [file, setFile] = useState<File>();
+  const [uploadStatus, setUploadStatus] = useState<string>();
+
   // Filter students based on search term
   const filteredStudents = students.filter((student) => {
     const matchesSearch = student.name.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesSearch;
   });
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+    }
+  };
+
+async function getFile() {
+  if (!file) {
+    setUploadStatus("No file selected.");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  try {
+    const response = await fetch("http://127.0.0.1:8000/upload_csv/", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (response.ok) {
+      setUploadStatus("File uploaded successfully!");
+    } else {
+      setUploadStatus("Failed to upload file.");
+    }
+  } catch (error) {
+    console.error("Error uploading file:", error);
+    setUploadStatus("An error occurred while uploading the file.");
+  }
+}
 
   return (
     <>
@@ -93,6 +129,13 @@ function App() {
             ))}
           </ul>
 
+        </div>
+
+        <div id="upload-container">
+            <h2>Upload Attendance</h2>
+            <input type="file" onChange={handleFileChange}/>
+            {file && <p>Selected File: {file.name}</p>}
+            <button id="submit-button" onClick={getFile}>Upload</button>
         </div>
        
       </div>
