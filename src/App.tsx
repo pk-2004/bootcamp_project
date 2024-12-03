@@ -42,8 +42,10 @@ function Student({ name }: Student) {
 function StudentPage() {
   const { name } = useParams(); // Get the student name from the URL
   const [attendance, setAttendance] = useState<AttendanceRecord[]>([]);
+  const [notes, setNotes] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [newNote, setNewNote] = useState("");
 
   // Fetch attendance records for the student
   useEffect(() => {
@@ -70,6 +72,22 @@ function StudentPage() {
     }
   }, [name]);
 
+  const handleNoteChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setNewNote(e.target.value);
+  };
+
+  const handleNoteSubmit = () => {
+    if (newNote.trim()) {
+      setNotes((prevNotes) => [...prevNotes, newNote]);
+      setNewNote(""); // Clear the input after submitting
+    }
+  };
+
+  // Calculate attendance percentage
+  const totalClasses = attendance.length;
+  const presentCount = attendance.filter(record => record.status === "Present").length;
+  const attendancePercentage = totalClasses ? (presentCount / totalClasses) * 100 : 0;
+
   return (
     <div className="student-page">
       <h2>{name}</h2>
@@ -77,9 +95,9 @@ function StudentPage() {
         <div className="performance-card">
           <h3>Attendance</h3>
           <div className="progress-bar">
-            <div className="progress" style={{ width: "75%" }}></div>
+            <div className="progress" style={{ width: `${attendancePercentage}%` }}></div>
           </div>
-          <p>75% attendance</p>
+          <p>{attendancePercentage.toFixed(2)}% attendance</p>
         </div>
       </section>
 
@@ -92,6 +110,21 @@ function StudentPage() {
           </div>
         ))}
       </div>
+
+      <section id="notes-section">
+        <h3>Notes</h3>
+        <textarea
+          value={newNote}
+          onChange={handleNoteChange}
+          placeholder="Add a note"
+        />
+        <button onClick={handleNoteSubmit}>Save Note</button>
+        <div className="notes-list">
+          {notes.map((note, index) => (
+            <p key={index} className="note-item">{note}</p>
+          ))}
+        </div>
+      </section>
 
       <Link to="/" className="back-link">
         Back to Dashboard

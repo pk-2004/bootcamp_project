@@ -17,7 +17,6 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
-
 # Initialize the database on startup
 setup_database()
 
@@ -43,28 +42,36 @@ def get_attendance_by_student(student_name: str):
     conn.close()
 
     # Ensure we return the data in the correct structure
+    if not rows:
+        raise HTTPException(status_code=404, detail=f"No attendance records found for {student_name}.")
+
     attendance_records = [{"date": row[0], "status": row[1]} for row in rows]
     return attendance_records
 
 # Route to upload multiple attendance records from a CSV
 @app.post("/upload_csv/")
 async def upload_csv(file: UploadFile = File(...)):
+
     if not file.filename.endswith(".csv"):
         raise HTTPException(status_code=400, detail="Invalid file type. Please upload a CSV.")
     
     records = []
     try:
+        print(f"Uploading file: {file.filename}")
         content = await file.read()
         decoded_content = content.decode("utf-8").splitlines()
+        print(content.decode("utf-8"))
         reader = csv.DictReader(decoded_content)
         
         for row in reader:
+            print(f"Processing row: {row}")  # Add print statements to debug row processing
             student_name = row["name"]
             date = row["date"]
             records.append((student_name, date, "Present"))  # Default status to "Present"
 
         insert_multiple_attendance(records)
     except Exception as e:
+        print(f"Error: {str(e)}")  # Add error logging for better debugging
         raise HTTPException(status_code=500, detail=f"Error processing file: {str(e)}")
 
     return {"message": f"Uploaded {len(records)} attendance records successfully."}
