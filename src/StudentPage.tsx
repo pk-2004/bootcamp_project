@@ -21,15 +21,14 @@ function StudentPage() {
           `http://127.0.0.1:8000/attendance/${decodeURIComponent(name || "")}`
         );
         if (!response.ok) {
-          throw new Error(`Failed to fetch attendance: ${response.statusText}`);
+          throw new Error(`Error: ${response.statusText}`);
         }
         const data: AttendanceRecord[] = await response.json();
         setAttendance(data);
       } catch (err: any) {
-        console.error(err); // Log the error to the console for debugging
-        setError(err.message); // Set the error state to display to the user
+        setError(err.message);
       } finally {
-        setLoading(false); // Stop loading once the data is fetched or error occurs
+        setLoading(false);
       }
     }
 
@@ -37,11 +36,6 @@ function StudentPage() {
       fetchStudentAttendance();
     }
   }, [name]);
-
-  // Calculate attendance percentage
-  const totalClasses = attendance.length;
-  const presentCount = attendance.filter(record => record.status === "Present").length;
-  const attendancePercentage = totalClasses > 0 ? Math.round((presentCount / totalClasses) * 100) : 0;
 
   if (loading) {
     return <div className="loading">Loading...</div>;
@@ -51,9 +45,14 @@ function StudentPage() {
     return <p className="error-message">Error: {error}</p>;
   }
 
+  // Calculate attendance percentage
+  const totalClasses = attendance.length;
+  const presentCount = attendance.filter(record => record.status === "Present").length;
+  const attendancePercentage = totalClasses > 0 ? Math.round((presentCount / totalClasses) * 100) : 0;
+
   return (
     <div className="student-page">
-      <h2>{name}</h2>
+      <h2 className="student-name">{name}</h2>
       <section id="student-performance">
         <div className="performance-card">
           <h3>Attendance</h3>
