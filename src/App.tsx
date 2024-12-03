@@ -46,6 +46,7 @@ function StudentPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [newNote, setNewNote] = useState("");
+  const [selectedWeeks, setSelectedWeeks] = useState<boolean[]>(new Array(9).fill(false)); // 9 weeks from 9/24 to 11/26
 
   // Fetch attendance records for the student
   useEffect(() => {
@@ -88,16 +89,49 @@ function StudentPage() {
   const presentCount = attendance.filter(record => record.status === "Present").length;
   const attendancePercentage = totalClasses ? (presentCount / totalClasses) * 100 : 0;
 
+  // Calculate progress based on selected checkboxes (weeks)
+  const handleWeekCheckboxChange = (index: number) => {
+    const updatedWeeks = [...selectedWeeks];
+    updatedWeeks[index] = !updatedWeeks[index]; // Toggle the selected state
+    setSelectedWeeks(updatedWeeks);
+  };
+
+  const selectedWeeksCount = selectedWeeks.filter(Boolean).length;
+  const progressBarPercentage = (selectedWeeksCount / selectedWeeks.length) * 100;
+
   return (
     <div className="student-page">
       <h2>{name}</h2>
       <section id="student-performance">
-        <div className="performance-card">
+
+        <div className="weeks-container">
           <h3>Attendance</h3>
+          <table className="weeks-table">
+            <thead>
+              <tr>
+                <th>Week</th>
+                <th>Select Week</th>
+              </tr>
+            </thead>
+            <tbody>
+              {["9/24", "10/1", "10/8", "10/15", "10/22", "10/29", "11/5", "11/12", "11/19"].map((week, index) => (
+                <tr key={index}>
+                  <td>{week}</td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={selectedWeeks[index]}
+                      onChange={() => handleWeekCheckboxChange(index)}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
           <div className="progress-bar">
-            <div className="progress" style={{ width: `${attendancePercentage}%` }}></div>
+            <div className="progress" style={{ width: `${progressBarPercentage}%` }}></div>
           </div>
-          <p>{attendancePercentage.toFixed(2)}% attendance</p>
+          <p>{progressBarPercentage.toFixed(2)}% progress</p>
         </div>
       </section>
 
