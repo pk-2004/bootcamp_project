@@ -2,7 +2,12 @@ import { useState } from 'react'
 import { BrowserRouter as Router, Route, Routes, Link, useParams } from 'react-router-dom';
 import './App.css'
 
-type Student = {name: string}; //, attendance: number, homework: number, participation: number
+{/*i was thinking we could store students in the backend where each student has a name, corresponding attendance which could be
+  stored as a list of the attendance type, we could also add things like their mentor group just to make it easy access
+  and filter students*/}
+  
+// type Attendance = {date: Date, present: boolean};
+type Student = {name: string}; //attendance: Array<Attendance>};
 
 {/*temporary until we figure out how to add students and access them from api*/}
 const students = [
@@ -19,7 +24,7 @@ const students = [
   { name: "Kyle Yin"},
 ];
 
-function Student({name}: Student) {
+function Student({name}: Student ) {
   
   return (
     <>
@@ -57,7 +62,7 @@ function App() {
           <ul className="student-list">
             {filteredStudents.map((student, index) => (
               <li key={index}>
-                <Student name={student.name} ></Student>
+                <Student name={student.name}></Student>
               </li>
             ))}
           </ul>
