@@ -3,43 +3,50 @@ const bodyParser = require('body-parser');
 const axios = require('axios');
 const app = express();
 const PORT = 3000;
+const path = require('path');
 
-// Use environment variables for API key
+// Load environment variables (Cerebras API key)
 require('dotenv').config();
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+const CEREBRAS_API_KEY = process.env.CEREBRAS_API_KEY;
 
 app.use(bodyParser.json());
+app.use(express.static('public'));
 
+// POST route to generate summary using Cerebras Llama model
 app.post('/api/generate-summary', async (req, res) => {
-    const { prompt } = req.body;
-    console.log('Received prompt:', prompt);  // Log to check
+  const { prompt } = req.body;
 
-    try {
-        const response = await axios.post(
-            'https://api.openai.com/v1/chat/completions',  // Use chat API endpoint
-            {
-                model: 'gpt-4',  // Use the correct model
-                messages: [
-                    { role: 'system', content: 'You are a helpful assistant.' },
-                    { role: 'user', content: prompt },
-                ],
-                max_tokens: 150,
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${OPENAI_API_KEY}`,  // Ensure API key is sent correctly
-                },
-            }
-        );
+  if (!prompt || typeof prompt !== 'string') {
+    return res.status(400).json({ error: 'Invalid prompt format.' });
+  }
 
-        res.json({ summary: response.data.choices[0].message.content }); // Use correct response path
-    } catch (error) {
-        console.error('Error with OpenAI API:', error.response ? error.response.data : error.message);
-        res.status(500).send('Error generating summary.');
-    }
+  try {
+    // Send a request to the Cerebras API for chat completion with the Llama 3.1 8B model
+    const response = await axios.post(
+      'https://api.cerebras.net/v1/chat/completions',
+      {
+        messages: [
+          { role: 'user', content: prompt },
+        ],
+        model: 'llama3.1-8b', // Use the correct model ID
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${CEREBRAS_API_KEY}`, // Add your Cerebras API Key
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    // Respond with the generated summary text from the API response
+    res.json({ summary: response.data.choices[0].message.content });
+
+  } catch (error) {
+    console.error('Error with Cerebras API:', error.response ? error.response.data : error.message);
+    res.status(500).json({ error: 'Failed to generate summary. Please try again later.' });
+  }
 });
 
 app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });

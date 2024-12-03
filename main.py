@@ -1,10 +1,22 @@
-# main.py
 from fastapi import FastAPI, HTTPException, UploadFile, File
 from pydantic import BaseModel
 import csv
+import sqlite3
 from database import get_db_connection, setup_database, insert_attendance, insert_multiple_attendance, get_all_attendance, get_attendance_by_student
 
 app = FastAPI()
+
+from fastapi.middleware.cors import CORSMiddleware
+
+# Allow CORS for all origins (adjust this as needed)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # You can replace "*" with specific origins for more security
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all HTTP methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allows all headers
+)
+
 
 # Initialize the database on startup
 setup_database()
@@ -23,11 +35,16 @@ def add_attendance(attendance: Attendance):
 
 # Route to retrieve attendance for a specific student
 @app.get("/attendance/{student_name}")
-def get_attendance(student_name: str):
-    attendance = get_attendance_by_student(student_name)
-    if attendance:
-        return {"attendance": [dict(row) for row in attendance]}
-    raise HTTPException(status_code=404, detail="Student not found")
+def get_attendance_by_student(student_name: str):
+    conn = sqlite3.connect("attendance.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT date, status FROM attendance WHERE student_name = ?", (student_name,))
+    rows = cursor.fetchall()
+    conn.close()
+
+    # Ensure we return the data in the correct structure
+    attendance_records = [{"date": row[0], "status": row[1]} for row in rows]
+    return attendance_records
 
 # Route to upload multiple attendance records from a CSV
 @app.post("/upload_csv/")
