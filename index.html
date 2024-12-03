@@ -1,93 +1,12 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student List</title>
-    <link rel="stylesheet" href="styles.css">
-    
-    <!-- Link to load Lobster font -->
-    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Petit+Formal+Script&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Notable&family=Petit+Formal+Script&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Kaisei+Opti&family=Lobster&family=Notable&family=Petit+Formal+Script&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div class="student-list-container">
-        <h1 class="title">AppDev Students!</h1>
-        <div class="upload-section">
-            <h2>Upload Attendance CSV</h2>
-            <form id="csvForm">
-                <input type="file" id="csvFile" accept=".csv" required>
-                <button type="submit">Upload</button>
-            </form>
-            <p id="uploadStatus"></p>
-        </div>
-        
-        <script>
-            // Event listener for file upload form submission
-            document.getElementById("csvForm").addEventListener("submit", async (e) => {
-                e.preventDefault(); // Prevent default form submission
-                const fileInput = document.getElementById("csvFile");
-                if (fileInput.files.length === 0) {
-                    alert("Please select a CSV file to upload.");
-                    return;
-                }
-        
-                const formData = new FormData();
-                formData.append("file", fileInput.files[0]);
-        
-                try {
-                    const response = await fetch("/upload_csv/", {
-                        method: "POST",
-                        body: formData,
-                    });
-        
-                    if (!response.ok) {
-                        const error = await response.json();
-                        alert(`Failed to upload: ${error.detail}`);
-                        return;
-                    }
-        
-                    const result = await response.json();
-                    document.getElementById("uploadStatus").innerText = result.message || "Upload successful!";
-                } catch (err) {
-                    alert("An error occurred while uploading the file.");
-                }
-            });
-            
-        </script>
-        
-        <input type="text" id="search-bar" placeholder="Search for a student..." oninput="filterStudents()">
-        <ul class="student-list" id="studentList">
-            <!-- Student list items -->
-            <li><a href="report.html?student=Emily">🤖 Emily Lawrence</a></li>
-            <li><a href="report.html?student=Cedric">🤖 Cedric Pierre-Louis</a></li>
-            <li><a href="report.html?student=Pranav">🤖 Pranav Krishnamurthy</a></li>
-            <li><a href="report.html?student=Misha">🤖 Misha Khan</a></li>
-            <li><a href="report.html?student=Harini">🤖 Harini Thirukonda</a></li>
-            <li><a href="report.html?student=Harini">🤖 Kira Le</a></li>
-            <li><a href="report.html?student=Harini">🤖 Andy Chen</a></li>
-            <li><a href="report.html?student=Harini">🤖 Riya Lakhani</a></li>
-            <li><a href="report.html?student=Harini">🤖 Rachel Li</a></li>
-            <li><a href="report.html?student=Harini">🤖 Uriel Vit-Ojiegbe</a></li>
-            <li><a href="report.html?student=Harini">🤖 Kyle Yin</a></li>
-        </ul>
-    </div>
-
-    <script>
-        function filterStudents() {
-            const searchValue = document.getElementById('search-bar').value.toLowerCase();
-            const studentList = document.getElementById('studentList').getElementsByTagName('li');
-            for (let i = 0; i < studentList.length; i++) {
-                const studentName = studentList[i].textContent.trim().toLowerCase(); 
-                if (studentName.includes(searchValue)) {
-                    studentList[i].style.display = "";
-                } else {
-                    studentList[i].style.display = "none";
-                }
-            }
-        }
-    </script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AppDev Director Dashboard</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>

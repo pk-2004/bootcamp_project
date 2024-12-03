@@ -1,0 +1,131 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0;
+  text-align: center;
+  color: rgba(46, 85, 148, 1);
+  background-color: white;
+}
+
+#title {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+#box {
+  padding: 2rem;
+  padding-top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#student-title {
+  padding: 0;
+  margin: 0;
+}
+
+#students-container {
+  width: 80%;
+  height: 30rem;
+  padding: 2rem;
+  margin: 2rem;
+  color: white;
+  border-style: solid;
+  background-color: rgba(46, 85, 148, 1);
+  border-color: rgba(46, 85, 148, 1);
+  border-radius: 15%;
+
+  font-size: 2rem;
+  overflow: auto;
+}
+
+#upload-container {
+  align-items: center;
+  justify-content: center;
+  height: 15rem;
+  padding: 2rem;
+  margin: 2rem;
+  color: white;
+  border-style: solid;
+  background-color: rgba(46, 85, 148, 1);
+  border-color: rgba(46, 85, 148, 1);
+  border-radius: 30%;
+}
+
+#search-bar {
+  margin: 1rem;
+  width: 80%;
+  font-size: 1rem;
+  border: 5px solid #DECDF5;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  transition: background-color 0.3s;
+  color: black;
+}
+
+#search-bar:focus {
+  background-color: #fff;
+  border-color: #815dbc; /* Purple border on focus */
+  outline: none;
+}
+
+/* Student List Styling */
+.student-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  overflow-y: scroll;
+  max-height: 100vh;
+}
+
+.student-list li {
+  background-color: #C9D6EA;
+  border: #6a4c9c;
+  font-family: "Kaisei Opti", serif;
+  margin: 5px 0;
+  padding: 15px;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+
+  text-decoration: none;
+  color: rgba(46, 85, 148, 1);
+  display: block;
+}
+
+.student-list li a {
+  text-decoration: none;
+  color: rgba(46, 85, 148, 1);
+  display: block;
+}
+
+.student-list li:hover {
+  background-color: #f3f3f3;
+  transform: translateY(-3px); /* Slight lift effect */
+}
+
+.student-list li a:hover {
+  color: #6a4c9c; /* Purple color on hover */
+}
+
+/* Hover Effect for Student List Items */
+.student-name {
+  background: #6a4c9c; /* Purple background */
+  color: white;
+  padding: 15px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.student-name:hover {
+  background-color: #5a3e7d; /* Darker purple */
+  transform: translateY(-5px);
+}
+
