@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { BrowserRouter as Router, Route, Routes, Link, useParams } from 'react-router-dom';
 import './App.css'
+import Navbar from './Navbar'
 
 {/*i was thinking we could store students in the backend where each student has a name, corresponding attendance which could be
   stored as a list of the attendance type, we could also add things like their mentor group just to make it easy access
   and filter students*/}
-  
+
 // type Attendance = {date: Date, present: boolean};
 type Student = {name: string}; //attendance: Array<Attendance>};
 
@@ -49,12 +50,13 @@ function App() {
 
   return (
     <>
-      <h1 id="title">AppDev Director Dashboard</h1>
+      <Navbar></Navbar>
+      <h1 id="title">Bootcamp Student Attendance</h1>
       
       <div id="box">
 
         <div id="students-container">
-          <h3 id="student-title">Students</h3>
+          {/* <h3 id="student-title">Students</h3> */}
           <input type="text" id="search-bar" placeholder="Search for a student..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}></input>
 
           {/* Student List */}
@@ -68,18 +70,6 @@ function App() {
           </ul>
 
         </div>
-
-        {/*i was thinking we could show the class total homework and participation completion*/}
-        <div id="box2">
-           <div id="homework-container">
-            <h2>overall hw completion</h2>
-          </div>
-
-          <div id="participation-container">
-          <h2>overall participation</h2>
-          </div>
-        </div>
-          
        
       </div>
     </>
