@@ -1,14 +1,14 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Route, Routes, Link, useParams } from 'react-router-dom';
 import './App.css'
 import Navbar from './Navbar'
 
+interface AttendanceRecord {
+  name: string;
+  date: string;
+  status: string;
+}
 
-{/*i was thinking we could store students in the backend where each student has a name, corresponding attendance which could be
-  stored as a list of the attendance type, we could also add things like their mentor group just to make it easy access
-  and filter students*/}
-
-// type Attendance = {date: Date, present: boolean};
 type Student = {name: string}; //attendance: Array<Attendance>};
 
 {/*temporary until we figure out how to add students and access them from api*/}
@@ -25,6 +25,7 @@ const students = [
   { name: "Uriel Vit-Ojiegbe"},
   { name: "Kyle Yin"},
 ];
+
 
 function Checkbox({content} : {content: string}) {
   const [isChecked, setIsChecked] = useState(false);
@@ -60,7 +61,7 @@ function Student({name}: Student ) {
   )
 }
 
-{/*main dashboard page*/}
+
 function App() {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -101,6 +102,39 @@ function App() {
 
 {/*student page which should be different for each student by using the data from backend*/}
 function StudentPage({ name }: { name: string }) {
+  const [attendance, setAttendance] = useState<AttendanceRecord[]>([]);
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  async function fetchStudentAttendance() {
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/attendance/${decodeURIComponent(name)}`);
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+      const data: AttendanceRecord[] = await response.json();
+  
+      setAttendance(data);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+      fetchStudentAttendance();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+  
+  if (error) {
+      return <p>Error: {error}</p>;
+  }
+  
   return (
     <div>
       <h2>{name}</h2>
@@ -117,27 +151,17 @@ function StudentPage({ name }: { name: string }) {
                 <p>75% attendance</p>
             </div>
 
-            <div className="performance-card">
-                <h3>Homework Assignments</h3>
-                <div className="progress-bar">
-                    <div className="progress"></div>
-                </div>
-                <p>85% completed</p>
-            </div>
-
-            {/*not sure how we're meausiring performance*/}
-            <div className="performance-card">
-                <h3>Participation</h3>
-                <div className="progress-bar">
-                    <div className="progress"></div>
-                </div>
-                <p>60% participation rate</p>
-            </div>
         </section>
 
         <div id="attendance-checkboxes">
-          {/*use the backend data to update attendance accordingly
-          attendanceData.map(*/}
+  
+          {attendance.map((record, index) => (
+              <tr key={index}>
+              <td>{record.date}</td>
+              <td>{record.status}</td>
+          </tr>
+          ))}
+
           {/* <Checkbox content={}></Checkbox> */}
         </div>
        
