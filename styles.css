@@ -447,3 +447,37 @@ footer {
 .upload-section button:hover {
     background-color: #5a3e7d;
 }
+
+#generate-summary {
+    display: inline-block;
+    background-color: purple;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 10px;
+}
+
+#generate-summary:hover {
+    background-color: gray;
+    transform: scale(1.05);
+
+    
+}
+
+#summary-output {
+    margin-top: 20px; 
+    padding: 15px; 
+    font-size: 20px; 
+    line-height: 1.6; 
+    background-color: #f9f9f9;
+    color: #333; 
+    border: 1px solid #ddd; 
+    border-radius: 10px; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    white-space: pre-wrap; 
+}

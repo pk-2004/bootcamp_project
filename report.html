@@ -43,49 +43,38 @@
             </div>
         </section>
 
-        <!-- Attendance Section -->
         <section class="attendance-section">
             <h3>Attendance</h3>
             <div class="attendance-list">
                 <label class="attendance-label">
-                    <input type="checkbox" class="attendance-checkbox" id="day1">
-                    9/24
+                    <input type="checkbox" class="attendance-checkbox" id="day1"> 9/24
                 </label>
                 <label class="attendance-label">
-                    <input type="checkbox" class="attendance-checkbox" id="day2">
-                    10/1
+                    <input type="checkbox" class="attendance-checkbox" id="day2"> 10/1
                 </label>
                 <label class="attendance-label">
-                    <input type="checkbox" class="attendance-checkbox" id="day3">
-                    10/8
+                    <input type="checkbox" class="attendance-checkbox" id="day3"> 10/8
                 </label>
                 <label class="attendance-label">
-                    <input type="checkbox" class="attendance-checkbox" id="day4">
-                    10/15
+                    <input type="checkbox" class="attendance-checkbox" id="day4"> 10/15
                 </label>
                 <label class="attendance-label">
-                    <input type="checkbox" class="attendance-checkbox" id="day5">
-                    10/22
+                    <input type="checkbox" class="attendance-checkbox" id="day5"> 10/22
                 </label>
                 <label class="attendance-label">
-                    <input type="checkbox" class="attendance-checkbox" id="day6">
-                    10/29
+                    <input type="checkbox" class="attendance-checkbox" id="day6"> 10/29
                 </label>
                 <label class="attendance-label">
-                    <input type="checkbox" class="attendance-checkbox" id="day7">
-                    11/5
+                    <input type="checkbox" class="attendance-checkbox" id="day7"> 11/5
                 </label>
                 <label class="attendance-label">
-                    <input type="checkbox" class="attendance-checkbox" id="day8">
-                    11/12
+                    <input type="checkbox" class="attendance-checkbox" id="day8"> 11/12
                 </label>
                 <label class="attendance-label">
-                    <input type="checkbox" class="attendance-checkbox" id="day9">
-                    11/19
+                    <input type="checkbox" class="attendance-checkbox" id="day9"> 11/19
                 </label>
                 <label class="attendance-label">
-                    <input type="checkbox" class="attendance-checkbox" id="day10">
-                    11/26
+                    <input type="checkbox" class="attendance-checkbox" id="day10"> 11/26
                 </label>
             </div>
         </section>
@@ -98,96 +87,88 @@
                 <!-- Saved notes will appear here -->
             </div>
         </section>
+
+        <section id="summary-section">
+            <button id="generate-summary">Generate Summary</button>
+            <div id="summary-output"></div>
+        </section>
     </div>
 
     <script>
-        // Function to go back to the previous page
         function goBack() {
             window.history.back();
         }
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const studentName = urlParams.get('student'); // Get the student parameter from the URL
-
-        // If the studentName exists, update the page with the student's name
+    
+        const studentName = new URLSearchParams(window.location.search).get('student');
         if (studentName) {
             document.getElementById('student-name').textContent = studentName;
-            document.title = `${studentName}'s Report`; // Change the page title to the student's name
-        } else {
-            // Fallback in case no student name is provided in the URL
-            document.getElementById('student-name').textContent = "Unknown Student";
-            document.title = "Student Report";
-
+            document.title = `${studentName}'s Report`;
         }
-
+    
         document.addEventListener("DOMContentLoaded", () => {
             const checkboxes = document.querySelectorAll(".attendance-checkbox");
             const progressElement = document.querySelector(".student-performance .performance-card:nth-child(1) .progress");
             const percentageText = document.querySelector(".student-performance .performance-card:nth-child(1) p");
-
-            // Function to calculate and update progress
+    
             function updateAttendanceProgress() {
                 const totalDays = checkboxes.length;
                 const checkedDays = Array.from(checkboxes).filter(checkbox => checkbox.checked).length;
                 const attendancePercentage = Math.round((checkedDays / totalDays) * 100);
-
-                // Update progress bar width
+    
                 progressElement.style.width = `${attendancePercentage}%`;
-
-                // Update percentage text
                 percentageText.textContent = `${attendancePercentage}% attendance`;
             }
-
-            // Attach event listener to all checkboxes
+    
             checkboxes.forEach(checkbox => {
                 checkbox.addEventListener("change", updateAttendanceProgress);
             });
-
-            // Initial update (in case some checkboxes are pre-checked)
+    
             updateAttendanceProgress();
-        });
-
-        document.addEventListener("DOMContentLoaded", () => {
-        const noteText = document.getElementById("note-text");
-        const saveNoteButton = document.getElementById("save-note-button");
-        const savedNotesContainer = document.getElementById("saved-notes-container");
-
-        // Function to save the note and add it to the list
-        function saveNote() {
-            const noteContent = noteText.value.trim();
-            if (noteContent === "") {
-                alert("Please write a note before saving.");
-                return;
+    
+            const noteText = document.getElementById("note-text");
+            const saveNoteButton = document.getElementById("save-note-button");
+            const savedNotesContainer = document.getElementById("saved-notes-container");
+    
+            function saveNote() {
+                const noteContent = noteText.value.trim();
+                if (!noteContent) {
+                    alert("Please write a note before saving.");
+                    return;
+                }
+    
+                const currentDate = new Date().toLocaleDateString("en-US", {
+                    year: "numeric", month: "short", day: "numeric"
+                });
+    
+                const noteCard = document.createElement("div");
+                noteCard.className = "note-card";
+                noteCard.innerHTML = `<p><strong>Date:</strong> ${currentDate}</p><p>${noteContent}</p>`;
+                savedNotesContainer.prepend(noteCard);
+    
+                noteText.value = "";
             }
+    
+            saveNoteButton.addEventListener("click", saveNote);
+    
+            function generateSummary() {
+                const totalDays = checkboxes.length;
+                const presentDays = Array.from(checkboxes).filter(checkbox => checkbox.checked).length;
+                const attendancePercentage = Math.round((presentDays / totalDays) * 100);
 
-            // Get the current date
-            const currentDate = new Date();
-            const formattedDate = currentDate.toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-            });
+                const savedNotes = Array.from(savedNotesContainer.children)
+                    .map(noteCard => noteCard.querySelector('p:nth-child(2)').textContent.trim())
+                    .join(", ");
 
-            // Create a new note card
-            const noteCard = document.createElement("div");
-            noteCard.className = "note-card";
+                const summary = `
+                    Attendance: ${attendancePercentage}% present.
+                    Comments: ${savedNotes || "No comments provided."}
+                `;
 
-            // Add content to the card
-            noteCard.innerHTML = `
-                <p><strong>Date:</strong> ${formattedDate}</p>
-                <p>${noteContent}</p>
-            `;
-
-            // Append the card to the saved notes container
-            savedNotesContainer.prepend(noteCard);
-
-            // Clear the textarea
-            noteText.value = "";
-        }
-
-        // Attach the saveNote function to the button click event
-        saveNoteButton.addEventListener("click", saveNote);
-    });
+                document.getElementById("summary-output").textContent = summary;
+            }
+    
+            document.getElementById("generate-summary").addEventListener("click", generateSummary);
+        });
     </script>
 </body>
 </html>
