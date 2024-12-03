@@ -8,6 +8,7 @@
 }
 
 #title {
+  font-family: 'Courier New', Courier, monospace;
   margin-top: 0;
   padding-top: 0;
 }
@@ -30,7 +31,7 @@
   height: 30rem;
   padding: 2rem;
   margin: 2rem;
-  color: white;
+  color: lightblue;
   border-style: solid;
   background-color: rgba(46, 85, 148, 1);
   border-color: rgba(46, 85, 148, 1);
@@ -46,7 +47,7 @@
   height: 15rem;
   padding: 2rem;
   margin: 2rem;
-  color: white;
+  color: whitesmoke;
   border-style: solid;
   background-color: rgba(46, 85, 148, 1);
   border-color: rgba(46, 85, 148, 1);
@@ -57,9 +58,9 @@
   margin: 1rem;
   width: 80%;
   font-size: 1rem;
-  border: 5px solid #DECDF5;
+  border: 5px solid #0022ff;
   border-radius: 10px;
-  background-color: #f9f9f9;
+  background-color: lightblue;
   transition: background-color 0.3s;
   color: black;
 }
