@@ -1,4 +1,5 @@
-# AppDev Attendance Tracker
+# AppDev Attendance Tracker, this is going to make the attendance proccess a lot more smooth and efficent
+
 A webapp that will allow instructors of appdev to upload attendence files and get a report in seconds
 
 # React + TypeScript + Vite
