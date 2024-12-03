@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Link, useParams } from 'react-r
 import './App.css'
 import Navbar from './Navbar'
 
+
 {/*i was thinking we could store students in the backend where each student has a name, corresponding attendance which could be
   stored as a list of the attendance type, we could also add things like their mentor group just to make it easy access
   and filter students*/}
@@ -24,6 +25,27 @@ const students = [
   { name: "Uriel Vit-Ojiegbe"},
   { name: "Kyle Yin"},
 ];
+
+function Checkbox({content} : {content: string}) {
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleOnChange = () => {
+    setIsChecked(!isChecked);
+  };
+
+  return (
+    <div>
+      <label>
+        <input 
+          type="checkbox" 
+          checked={isChecked} 
+          onChange={handleOnChange}
+        />
+        {content}
+      </label>
+    </div>
+  );
+}
 
 function Student({name}: Student ) {
   
@@ -57,7 +79,8 @@ function App() {
 
         <div id="students-container">
           {/* <h3 id="student-title">Students</h3> */}
-          <input type="text" id="search-bar" placeholder="Search for a student..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}></input>
+          <input type="text" id="search-bar" placeholder="Search for a student..." value={searchTerm} 
+            onChange={(e) => setSearchTerm(e.target.value)}></input>
 
           {/* Student List */}
 
@@ -112,6 +135,11 @@ function StudentPage({ name }: { name: string }) {
             </div>
         </section>
 
+        <div id="attendance-checkboxes">
+          {/*use the backend data to update attendance accordingly
+          attendanceData.map(*/}
+          {/* <Checkbox content={}></Checkbox> */}
+        </div>
        
       <Link to="/">Back to Dashboard</Link>
     </div>
