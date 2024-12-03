@@ -1,4 +1,5 @@
 # AppDev Attendance Tracker
+A webapp that will allow instructors of appdev to upload attendence files and get a report in seconds
 
 # React + TypeScript + Vite
 
